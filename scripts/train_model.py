@@ -5,9 +5,9 @@ import torch.nn.functional as F
 import sys
 
 sys.path.append("/home/suqun/tmp/GMP/pretrain")
-from GenScore.data.data import PDBbindDataset
-from GenScore.model.pretrain_model import GenScore, GraphTransformer, GatedGCN, SubEGAT, SubGT
-from GenScore.model.utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn
+from SuScore.data.data import PDBbindDataset
+from SuScore.model.pretrain_model import GenScore, GraphTransformer, GatedGCN, SubEGAT, SubGT
+from SuScore.model.utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn
 import torch.multiprocessing
 
 torch.multiprocessing.set_sharing_strategy('file_system')
