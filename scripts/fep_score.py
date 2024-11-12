@@ -61,14 +61,14 @@ def scoring(ids, prots, ligs, model, seed=None, **kwargs):
     # try:
     dataset = PDBbindDataset(ids=ids, prots=prots, ligs=ligs)
 
-    # _, val_inds = dataset.train_and_test_split(valnum=6, seed=seed)
-    # print(f"fep_score: {val_inds}")
+    _, val_inds = dataset.train_and_test_split(valnum=6, seed=seed)
+    print(f"fep_score: {val_inds}")
 
-    # data = PDBbindDataset(ids=dataset.pdbids[val_inds],
-    #                       ligs=dataset.gls[val_inds],
-    #                       prots=dataset.gps[val_inds],
-    #                       labels=dataset.labels[val_inds]
-    #                       )
+    data = PDBbindDataset(ids=dataset.pdbids[val_inds],
+                          ligs=dataset.gls[val_inds],
+                          prots=dataset.gps[val_inds],
+                          labels=dataset.labels[val_inds]
+                          )
 
     test_loader = DataLoader(dataset=dataset,
                              batch_size=kwargs["batch_size"],
