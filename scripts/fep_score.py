@@ -10,9 +10,9 @@ from sklearn.metrics import mean_squared_error
 
 sys.path.append("/home/suqun/tmp/GMP/pretrain")
 from torch_geometric.loader import DataLoader
-from GenScore.data.data import PDBbindDataset
-from GenScore.model.ET_finetune import GenScore, GraphTransformer, GatedGCN, SubGT
-from GenScore.model.mdn_utils import GIP_eval_epoch
+from SuScore.data.data import PDBbindDataset
+from SuScore.model.ET_finetune import GenScore, GraphTransformer, GatedGCN, SubGT
+from SuScore.model.mdn_utils import GIP_eval_epoch
 import torch.multiprocessing
 
 torch.multiprocessing.set_sharing_strategy('file_system')
