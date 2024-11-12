@@ -62,11 +62,6 @@ if __name__ == '__main__':
                                  prots="%s/%s_prot.pt" % (args.data_dir, 'val')
                                  )
 
-    test_dataset = PDBbindDataset(ids="%s/%s_ids.npy" % (args.data_dir, 'test'),
-                                  ligs="%s/%s_lig.pt" % (args.data_dir, 'test'),
-                                  prots="%s/%s_prot.pt" % (args.data_dir, 'test')
-                                  )
-
     set_random_seed(args.seeds)
 
     if args.encoder == "gt":
@@ -105,15 +100,13 @@ if __name__ == '__main__':
         model_dict = model.state_dict()
         checkpoint = th.load(args.original_model_path, map_location=th.device(args.device))
 
-        # 遍历checkpoint的键值对，将对应的参数加载到模型参数字典中
         for k, v in checkpoint['model_state_dict'].items():
             if k in model_dict:
                 model_dict[k] = v
 
         for name, param in model.named_parameters():
             print(name, param.shape)
-
-        # 将加载的模型参数加载到模型中
+            
         model.load_state_dict(model_dict)
 
     optimizer = th.optim.Adam(model.parameters(), lr=10 ** -args.lr, weight_decay=10 ** -args.weight_decay)
@@ -127,11 +120,6 @@ if __name__ == '__main__':
                             batch_size=args.batch_size,
                             shuffle=False,
                             num_workers=args.num_workers)
-
-    test_loader = DataLoader(dataset=test_dataset,
-                             batch_size=args.batch_size,
-                             shuffle=False,
-                             num_workers=args.num_workers)
 
     stopper = EarlyStopping(patience=args.patience, mode=args.mode, filename=args.model_path)
 
@@ -156,30 +144,21 @@ if __name__ == '__main__':
                                                 aux_weight=args.aux_weight,
                                                 device=args.device)
 
-        test_sp, test_pr, _, test_rmse = GIP_eval_epoch(model,
-                                                  test_loader,
-                                                  dist_threhold=args.dist_threhold2,
-                                                  affi_weight=args.affi_weight,
-                                                  aux_weight=args.aux_weight,
-                                                  device=args.device)
 
-
-        early_stop = stopper.step({"val": val_sp, "test": test_sp}, model)
+        early_stop = stopper.step({"val": val_sp}, model)
 
         try:
             logging.info(
-                'epoch {:d}/{:d}, train_loss {:.4f}, train_pr {:.4f}, val_rmse {:.4f}, val_sp {:.4f}, test_rmse {:.4f}, '
-                'test_sp {:.4f}, best val validation {:.4f}, best test validation {:.4f}'.format(
-                    epoch + 1, args.num_epochs, train_loss, train_pr, val_rmse, val_sp, test_rmse, test_sp,
-                    stopper.best_score["val"], stopper.best_score["test"]))
+                'epoch {:d}/{:d}, train_loss {:.4f}, train_pr {:.4f}, val_rmse {:.4f}, val_sp {:.4f}, best val validation {:.4f}'.format(
+                    epoch + 1, args.num_epochs, train_loss, train_pr, val_rmse, val_sp,
+                    stopper.best_score["val"]))
         except:
             pass
 
         print(
-            'epoch {:d}/{:d}, train_loss {:.4f}, train_pr {:.4f}, val_rmse {:.4f}, val_sp {:.4f}, test_rmse {:.4f}, '
-                'test_sp {:.4f}, best val validation {:.4f}, best test validation {:.4f}'.format(
-                    epoch + 1, args.num_epochs, train_loss, train_pr, val_rmse, val_sp, test_rmse, test_sp,
-                    stopper.best_score["val"], stopper.best_score["test"])
+            'epoch {:d}/{:d}, train_loss {:.4f}, train_pr {:.4f}, val_rmse {:.4f}, val_sp {:.4f}, est val validation {:.4f}'.format(
+                    epoch + 1, args.num_epochs, train_loss, train_pr, val_rmse, val_sp,
+                    stopper.best_score["val"])
         )  # +' validation result:', validation_result)
         if early_stop:
             break
