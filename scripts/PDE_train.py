@@ -6,7 +6,7 @@ import sys
 
 sys.path.append("/home/suqun/tmp/GMP/pretrain")
 from GenScore.data.data import PDBbindDataset
-from GenScore.model.ET_MDN import GenScore, GraphTransformer, SubGT
+from GenScore.model.ET_MDN import LumiScore, GraphTransformer, SubGT
 from GenScore.model.mdn_utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn, \
     GIP_train_epoch, GIP_eval_epoch, GIP_semi_label
 from fep_score import fep_score
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     p.add_argument('--lr', type=int, default=3)
     p.add_argument('--weight_decay', type=int, default=5)
     p.add_argument('--data_dir', type=str,
-                   default="/home/suqun/tmp/GMP/pretrain/GenScore/feats/PDE10A/random_split")
+                   default="/home/suqun/tmp/GMP/pretrain/LumiScore/feats/PDE10A/random_split")
     p.add_argument('--data_prefix', type=str, default="pignet")
     p.add_argument('--valnum', type=int, default=0)
     p.add_argument('--seeds', type=int, default=126)
