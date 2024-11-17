@@ -133,6 +133,10 @@ if __name__ == '__main__':
 
     stopper = EarlyStopping(patience=args.patience, mode=args.mode, filename=args.model_path)
 
+    ckpt_list = []
+    best_loss = 0.0
+    max_ckpt_maintain = 10
+
     for epoch in range(args.num_epochs):
         total_loss_train, train_pr = GIP_train_epoch(epoch,
                                                      model,
@@ -150,7 +154,28 @@ if __name__ == '__main__':
                                                          aux_weight=args.aux_weight,
                                                          device=args.device)
 
-        early_stop = stopper.step({"val": val_pr}, model)
+        if val_pr > best_loss:
+                best_loss = val_losses[-1]
+                
+                state = {
+                    "model": model.state_dict(),
+                    'cur_epoch': epoch,
+                    'best_loss': best_loss,
+                }
+                epoch = str(epoch) if epoch is not None else ''
+                checkpoint = os.path.join(config.train.save_path, 'checkpoint%s' % epoch)
+
+                if len(ckpt_list) >= max_ckpt_maintain:
+                    try:
+                        os.remove(ckpt_list[0])
+                    except:
+                        print('Remove checkpoint failed for', ckpt_list[0])
+                    ckpt_list = ckpt_list[1:]
+                    ckpt_list.append(checkpoint)
+                else:
+                    ckpt_list.append(checkpoint)
+
+                th.save(state, checkpoint)
 
         print(
             'epoch {:d}/{:d}, train_loss {:.4f}, total_loss_val {:.4f}, affi_loss_val {:.4f}'.format(
