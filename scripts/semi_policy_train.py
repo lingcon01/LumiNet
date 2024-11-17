@@ -5,7 +5,7 @@ from torch.utils.data import ConcatDataset
 import torch.nn.functional as F
 import sys
 
-sys.path.append("/home/suqun/tmp/GMP/pretrain")
+sys.path.append("") # your program path
 from SuScore.data.data import PDBbindDataset
 from SuScore.model.ET_MDN import GenScore, GraphTransformer, SubGT
 from SuScore.model.mdn_utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn, \
@@ -24,25 +24,21 @@ if __name__ == '__main__':
     seed = 'seed0'
 
     p = argparse.ArgumentParser()
-    p.add_argument('--num_epochs', type=int, default=5000)
+    p.add_argument('--num_epochs', type=int, default=1000)
     p.add_argument('--batch_size', type=int, default=32)
     p.add_argument('--aux_weight', type=float, default=0.001)
     p.add_argument('--affi_weight', type=float, default=0)
     p.add_argument('--patience', type=int, default=150)
     p.add_argument('--num_workers', type=int, default=2)
-    p.add_argument('--model_path', type=str,
-                   default=f"/home/suqun/tmp/GMP/pretrain/train_and_test/semi_train_policy/ET_MDN/derivate/{seed}/retrain2/retrain_2_{seed}.pth")
+    p.add_argument('--model_path', type=str, default=f"", help='model save path')
     p.add_argument('--encoder', type=str, choices=['gt', 'gatedgcn'], default="gt")
     p.add_argument('--mode', type=str, choices=['lower', 'higher'], default="lower")
     p.add_argument('--finetune', action="store_true", default=True)
-    p.add_argument('--original_model_path', type=str,
-                   default='/home/suqun/tmp/GMP/pretrain/train_and_test/semi_train_policy/ET_MDN/derivate/{seed}/retrain1/retrain_1_{seed}.pth')
+    p.add_argument('--original_model_path', type=str, default='', help='the init score model path')
     p.add_argument('--lr', type=int, default=3)
     p.add_argument('--weight_decay', type=int, default=5)
-    p.add_argument('--data_dir', type=str, default="/home/suqun/tmp/GMP/pretrain/GenScore/feats")
-    p.add_argument('--val_dir', type=str, default="/home/suqun/tmp/GMP/pretrain/GenScore/feats/fep")
-    p.add_argument('--val_dir3', type=str, default="/home/suqun/tmp/GMP/pretrain/GenScore/feats/derivate/split_data")
-    p.add_argument('--data_prefix', type=str, default="pignet")
+    p.add_argument('--data_dir', type=str, default="", help='train datadir')
+    p.add_argument('--data_prefix', type=str, default="")
     p.add_argument('--valnum', type=int, default=0)
     p.add_argument('--seeds', type=int, default=126)
     p.add_argument('--hidden_dim0', type=int, default=128)
@@ -68,11 +64,6 @@ if __name__ == '__main__':
                                     ligs="%s/%s_lig.pt" % (datadir, 'derivate'),
                                     prots="%s/%s_prot.pt" % (datadir, 'derivate')
                                     )
-
-    val_dataset1 = PDBbindDataset(ids="%s/%s_ids.npy" % (args.data_dir, 'casf2016'),
-                                  ligs="%s/%s_lig.pt" % (args.data_dir, 'casf2016'),
-                                  prots="%s/%s_prot.pt" % (args.data_dir, 'casf2016')
-                                  )
 
     for prefix in args.test_prefix2:
         prots = '%s/%s_prot.pt' % (args.val_dir3, prefix)
@@ -129,8 +120,7 @@ if __name__ == '__main__':
             raise ValueError('the argument "original_model_path" should be given')
         model_dict = model.state_dict()
         checkpoint = th.load(args.original_model_path, map_location=th.device(args.device))
-
-        # 遍历checkpoint的键值对，将对应的参数加载到模型参数字典中
+        
         for k, v in checkpoint['model_state_dict'].items():
         # for k, v in checkpoint.items():
             if k in model_dict:
@@ -138,8 +128,7 @@ if __name__ == '__main__':
 
         for name, param in model.named_parameters():
             print(name, param.shape)
-
-        # 将加载的模型参数加载到模型中
+            
         model.load_state_dict(model_dict)
 
     optimizer = th.optim.Adam(model.parameters(), lr=10 ** -args.lr, weight_decay=10 ** -args.weight_decay)
@@ -154,10 +143,6 @@ if __name__ == '__main__':
                                shuffle=True,
                                num_workers=args.num_workers)
 
-    val_loader1 = DataLoader(dataset=val_dataset1,
-                             batch_size=args.batch_size,
-                             shuffle=False,
-                             num_workers=args.num_workers)
 
     stopper = EarlyStopping(patience=args.patience, mode=args.mode, filename=args.model_path)
 
@@ -173,12 +158,6 @@ if __name__ == '__main__':
                                                     dist_threhold=args.dist_threhold2,
                                                     device=args.device)
 
-        total_loss_test1, test_pr1, _, _ = GIP_eval_epoch(model,
-                                                          val_loader1,
-                                                          dist_threhold=args.dist_threhold2,
-                                                          affi_weight=args.affi_weight,
-                                                          aux_weight=args.aux_weight,
-                                                          device=args.device)
 
         spearman, pr, rmse, aver_pr = fep_score(model)
 
