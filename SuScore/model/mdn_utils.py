@@ -454,36 +454,6 @@ def GIP_train_epoch(epoch, model, data_loader, optimizer, mdn_weight=1.0, affi_w
         loss1 = abs(loss_fn(vdw_pred, vdw) - 0.5)
         loss2 = loss_fn(pred, labels)
         loss_radius = vdw_radius.pow(2).mean()
-        # version3
-        # =================================================================================================
-        # # loss_radius = vdw_radius.pow(2).mean()
-        loss_mdn = th.corrcoef(th.stack([mdn_pred, labels]))[1, 0].item()
-
-        # print(f"loss_pred: {loss2}, mdn: {mdn}, loss_mdn: {loss_mdn}, loss1:{loss1*0.05}")
-        # loss = loss2 + (mdn - loss_mdn) * 0.5 + 0.01 * loss1 # v4
-        # loss = loss2 + 0.05 * loss1 + 10 * loss_radius + mdn -  loss_mdn  # v3
-        # # loss = loss2 + 0.1 * loss1
-        loss = loss2 + (mdn - loss_mdn) * 0.5 + 0.05 * loss1 # v2
-        # loss = loss2 + (mdn - loss_mdn) * 0.5                     # v1
-        # =================================================================================================
-
-        # =================================================================================================
-        # # version4
-        # affi_mdn = th.corrcoef(th.stack([mdn_pred, labels]))[1, 0].item()
-        # affi_score = th.corrcoef(th.stack([pred, labels]))[1, 0].item()
-        # loss_mdn = loss_fn(mdn_pred, labels)
-        #
-        # print(f"loss_pred: {loss2}, mdn: {mdn}, loss_mdn: {loss_mdn}, affi_mdn: {affi_mdn}, affi_score: {affi_score}")
-        # # loss = loss2 + 0.05 * loss1 + 10 * loss_radius + mdn - loss_mdn
-        # # loss = loss2 + 0.1 * loss1
-        # loss = loss2 + mdn + loss_mdn * 0.1
-        # =================================================================================================
-
-        # version 5
-
-        # loss_mdn = th.corrcoef(th.stack([mdn_pred, labels]))[1, 0].item()
-        # print(f"loss1:{loss1*0.05}, loss2:{loss2}, loss_radius:{5 * loss_radius}")
-        # loss = loss2 + 0.02 * loss1 + 5 * loss_radius
 
         optimizer.zero_grad()
         loss.backward()
