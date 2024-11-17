@@ -20,7 +20,7 @@ if __name__ == '__main__':
     import argparse
 
     p = argparse.ArgumentParser()
-    p.add_argument('--num_epochs', type=int, default=5000)
+    p.add_argument('--num_epochs', type=int, default=20)
     p.add_argument('--batch_size', type=int, default=32)
     p.add_argument('--aux_weight', type=float, default=0.001)
     p.add_argument('--affi_weight', type=float, default=0)
