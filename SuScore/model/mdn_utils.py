@@ -97,16 +97,8 @@ class EarlyStopping(object):
             self._check = self._check_lower
 
         self.patience = patience
-        target_list = ['786', '677', '484', '78', '1081', '505', 's1p1r', '676', '87', '762', '789', '1004', '77',
-                         '1170', '761', '787', '889', '1163', '707', '993', '488', '381', '1209', '796', '894', '1164'
-                         , '1076', '1171']
-        self.counter = dict()
-        for target in target_list:
-            self.counter[target] = 0
-        # self.counter = {"CDK8": 0, "CMET": 0, "EG5": 0, "HIF-2α": 0, "PFKFB3": 0, "SHP2": 0, "SYK": 0, "TNKS2": 0}
-        # self.counter = {"BACE": 0, "CDK2": 0, "JNK1": 0, "MCL1": 0, "P38": 0, "PTP1B": 0, "Thrombin": 0, "TYK2": 0}
-        self.counter = {"fep": 0, "derivate": 0}
-        # self.counter = {'best': 0}
+        self.counter = {"CDK8": 0, "CMET": 0, "EG5": 0, "HIF-2α": 0, "PFKFB3": 0, "SHP2": 0, "SYK": 0, "TNKS2": 0}
+        self.counter = {"BACE": 0, "CDK2": 0, "JNK1": 0, "MCL1": 0, "P38": 0, "PTP1B": 0, "Thrombin": 0, "TYK2": 0}
         self.timestep = 0
         self.filename = filename
         self.best_score = {}
