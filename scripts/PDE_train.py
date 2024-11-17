@@ -4,7 +4,7 @@ from torch_geometric.loader import DataLoader
 import torch.nn.functional as F
 import sys
 
-sys.path.append("/home/suqun/tmp/GMP/pretrain")
+sys.path.append("") # your program
 from SuScore.data.data import PDBbindDataset
 from SuScore.model.ET_MDN import LumiScore, GraphTransformer, SubGT
 from SuScore.model.mdn_utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn, \
@@ -28,17 +28,16 @@ if __name__ == '__main__':
     p.add_argument('--patience', type=int, default=150)
     p.add_argument('--num_workers', type=int, default=2)
     p.add_argument('--model_path', type=str,
-                   default="/home/suqun/tmp/GMP/pretrain/train_and_test/PDE10A/random_split/local.pth")
+                   default="", help='model save')
     p.add_argument('--encoder', type=str, choices=['gt', 'gatedgcn'], default="gt")
     p.add_argument('--mode', type=str, choices=['lower', 'higher'], default="higher")
     p.add_argument('--finetune', action="store_true", default=True)
     p.add_argument('--original_model_path', type=str,
-                   default='/home/suqun/tmp/GMP/pretrain/EGMDN/ET_pretrain.pth')
+                   default='', 'init mdn model')
     p.add_argument('--lr', type=int, default=3)
     p.add_argument('--weight_decay', type=int, default=5)
-    p.add_argument('--data_dir', type=str,
-                   default="/home/suqun/tmp/GMP/pretrain/LumiScore/feats/PDE10A/random_split")
-    p.add_argument('--data_prefix', type=str, default="pignet")
+    p.add_argument('--data_dir', type=str, default="", 'PDE10A data')
+    p.add_argument('--data_prefix', type=str, default="")
     p.add_argument('--valnum', type=int, default=0)
     p.add_argument('--seeds', type=int, default=126)
     p.add_argument('--hidden_dim0', type=int, default=128)
@@ -122,9 +121,6 @@ if __name__ == '__main__':
                             num_workers=args.num_workers)
 
     stopper = EarlyStopping(patience=args.patience, mode=args.mode, filename=args.model_path)
-
-    best_fep_pr = 0.0
-    best_derivate_pr = 0.0
 
     for epoch in range(args.num_epochs):
 
