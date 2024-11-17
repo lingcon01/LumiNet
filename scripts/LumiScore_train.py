@@ -24,19 +24,19 @@ if __name__ == '__main__':
     p.add_argument('--batch_size', type=int, default=32)
     p.add_argument('--aux_weight', type=float, default=0.001)
     p.add_argument('--affi_weight', type=float, default=0)
-    p.add_argument('--patience', type=int, default=150)
+    p.add_argument('--patience', type=int, default=5)
     p.add_argument('--num_workers', type=int, default=0)
     p.add_argument('--model_path', type=str,
-                   default="/home/suqun/tmp/GMP/pretrain/train_and_test/my_test/SuScore_local3_88.pth")
+                   default="", help="the datadir you wangt to save model")
     p.add_argument('--encoder', type=str, choices=['gt', 'gatedgcn'], default="gt")
     p.add_argument('--mode', type=str, choices=['lower', 'higher'], default="higher")
     p.add_argument('--finetune', action="store_true", default=True)
     p.add_argument('--original_model_path', type=str,
-                   default='/home/suqun/tmp/GMP/pretrain/EGMDN/ET_pretrain.pth')
+                   default='', help="pretrain_model_path")
     p.add_argument('--lr', type=int, default=3)
     p.add_argument('--weight_decay', type=int, default=5)
-    p.add_argument('--data_dir', type=str, default="/home/suqun/tmp/GMP/pretrain/GenScore/feats")
-    p.add_argument('--data_prefix', type=str, default="pignet")
+    p.add_argument('--data_dir', type=str, default="")
+    p.add_argument('--data_prefix', type=str, default="")
     p.add_argument('--valnum', type=int, default=500)
     p.add_argument('--seeds', type=int, default=88)
     p.add_argument('--hidden_dim0', type=int, default=128)
@@ -163,7 +163,7 @@ if __name__ == '__main__':
                     'best_loss': best_loss,
                 }
                 epoch = str(epoch) if epoch is not None else ''
-                checkpoint = os.path.join(config.train.save_path, 'checkpoint%s' % epoch)
+                checkpoint = os.path.join(args.model_path, 'checkpoint%s' % epoch)
 
                 if len(ckpt_list) >= max_ckpt_maintain:
                     try:
