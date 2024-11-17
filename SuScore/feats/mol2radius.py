@@ -534,7 +534,7 @@ def UserInput():
                    help='The directory to store the protein-ligand complexes.')
     p.add_argument('-c', '--cutoff', default=5.0, type=float,
                    help='the cutoff to determine the pocket')
-    p.add_argument('-o', '--outprefix', default="pignet_H",
+    p.add_argument('-o', '--outprefix', default="SARS_H",
                    help='The output bin file.')
     p.add_argument('-r', '--ref', default="/home/suqun/tmp/GMP/data/SARS/id2labels.csv",
                    help='The reference file to query the label of the complex.')
