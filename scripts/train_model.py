@@ -4,7 +4,7 @@ from torch_geometric.loader import DataLoader
 import torch.nn.functional as F
 import sys
 
-sys.path.append("/home/suqun/tmp/GMP/pretrain")
+sys.path.append("") # change to your path
 from SuScore.data.data import PDBbindDataset
 from SuScore.model.pretrain_model import GenScore, GraphTransformer, GatedGCN, SubEGAT, SubGT
 from SuScore.model.utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn
@@ -22,14 +22,14 @@ if __name__ == '__main__':
     p.add_argument('--affi_weight', type=float, default=0.0)
     p.add_argument('--patience', type=int, default=200)
     p.add_argument('--num_workers', type=int, default=8)
-    p.add_argument('--model_path', type=str, default="/home/suqun/tmp/GMP/pretrain/EGMDN/ET_pretrain.pth")
+    p.add_argument('--model_path', type=str, default="", help='save path')
     p.add_argument('--encoder', type=str, choices=['gt', 'gatedgcn'], default="gt")
     p.add_argument('--mode', type=str, choices=['lower', 'higher'], default="lower")
     p.add_argument('--finetune', action="store_true", default=False)
     p.add_argument('--original_model_path', type=str, default=None)
     p.add_argument('--lr', type=int, default=3)
     p.add_argument('--weight_decay', type=int, default=5)
-    p.add_argument('--data_dir', type=str, default="/home/suqun/tmp/GMP/pretrain/GenScore/feats/ET_data")
+    p.add_argument('--data_dir', type=str, default="", help='your data path')
     p.add_argument('--data_prefix', type=str, default="PDB2020_coords")
     p.add_argument('--valnum', type=int, default=1500)
     p.add_argument('--seeds', type=int, default=126)
@@ -60,23 +60,6 @@ if __name__ == '__main__':
                               labels=data.labels[val_inds]
                               )
     if args.encoder == "gt":
-        # ligmodel = GraphTransformer(in_channels=41,
-        #                             edge_features=11,
-        #                             num_hidden_channels=args.hidden_dim0,
-        #                             activ_fn=th.nn.SiLU(),
-        #                             transformer_residual=True,
-        #                             num_attention_heads=4,
-        #                             norm_to_apply='batch',
-        #                             dropout_rate=0.15,
-        #                             num_layers=6
-        #                             )
-
-        # ligmodel = SubEGAT(in_channels=41,
-        #                    edge_features=11,
-        #                    num_hidden_channels=args.hidden_dim0,
-        #                    dropout_rate=0.15,
-        #                    equivstable_pe=False,
-        #                    num_layers=6)
 
         ligmodel = SubGT(in_channels=41,
                         edge_features=10,
@@ -100,14 +83,6 @@ if __name__ == '__main__':
                                      num_layers=6
                                      )
     else:
-        # ligmodel = GatedGCN(in_channels=41,
-        # 					edge_features=10,
-        # 					num_hidden_channels=args.hidden_dim0,
-        # 					residual=True,
-        # 					dropout_rate=0.15,
-        # 					equivstable_pe=False,
-        # 					num_layers=6
-        # 					)
 
         ligmodel = SubEGAT(in_channels=41,
                            edge_features=11,
