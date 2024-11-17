@@ -4,7 +4,7 @@ from torch_geometric.loader import DataLoader
 import torch.nn.functional as F
 import sys
 
-sys.path.append("/home/suqun/tmp/GMP/pretrain")
+sys.path.append("") # change to your program datadir
 from SuScore.data.data import PDBbindDataset
 from SuScore.model.ET_MDN import GenScore, GraphTransformer, SubGT
 from SuScore.model.mdn_utils import EarlyStopping, set_random_seed, run_a_train_epoch, run_an_eval_epoch, mdn_loss_fn, \
