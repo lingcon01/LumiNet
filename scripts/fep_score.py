@@ -8,7 +8,7 @@ from scipy.stats import pearsonr
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 
-sys.path.append("/home/suqun/tmp/GMP/pretrain")
+sys.path.append("") # your program path
 from torch_geometric.loader import DataLoader
 from SuScore.data.data import PDBbindDataset
 from SuScore.model.ET_finetune import GenScore, GraphTransformer, GatedGCN, SubGT
@@ -22,27 +22,10 @@ args["dist_threhold"] = 5.
 args['device'] = 'cuda' if th.cuda.is_available() else 'cpu'
 args['seeds'] = 126
 args["num_workers"] = 2
-args["model_path1"] = "/home/suqun/tmp/GMP/pretrain/EGMDN/ET_finetune/cleaned_result/version4_inter2_each_fep.pth"
-args["model_path2"] = "/home/suqun/tmp/GMP/pretrain/EGMDN/ET_finetune/cleaned_result/version4_inter2_each_derivate.pth"
-args["data_dir1"] = "/home/suqun/tmp/GMP/pretrain/GenScore/feats/fep/split_data"
-args["data_dir2"] = "/home/suqun/tmp/GMP/pretrain/GenScore/feats/derivate_new/split_data"
+args["data_dir1"] = "" # fep data 1
+args["data_dir2"] = "" # fep_data 2
 args["test_prefix1"] = ["cdk8", "cmet", "eg5", "hif2a", "pfkfb3", "shp2", "syk", "tnks2"]
 args["test_prefix2"] = ["Bace", "CDK2", "Jnk1", "MCL1", "p38", "PTP1B", "Thrombin", "Tyk2"]
-args["test_prefix3"] = ["all"]
-args["test_prefix4"] = ["derivate"]
-args["cutoff"] = 10.0
-args["encoder"] = "gt"
-args["num_node_featsp"] = 41
-args["num_node_featsl"] = 41
-args["num_edge_featsp"] = 7
-args["num_edge_featsl"] = 10
-args["hidden_dim0"] = 128
-args["hidden_dim"] = 128
-args["n_gaussians"] = 10
-args["dropout_rate"] = 0.15
-
-
-# args["outprefix"] = "cmet"
 
 
 def scoring(ids, prots, ligs, model, seed=None, **kwargs):
@@ -91,7 +74,6 @@ def fep_score(model, seed):
     derivate_score_rmse = []
 
     for prefix in args["test_prefix1"]:
-        print(f"================================={prefix}================================")
 
         prots = '%s/%s_prot.pt' % (args["data_dir1"], prefix)
         ligs = '%s/%s_lig.pt' % (args["data_dir1"], prefix)
@@ -104,7 +86,6 @@ def fep_score(model, seed):
         fep_score_rmse.append(rmse)
 
     for prefix in args["test_prefix2"]:
-        print(f"================================={prefix}================================")
 
         prots = '%s/%s_prot.pt' % (args["data_dir2"], prefix)
         ligs = '%s/%s_lig.pt' % (args["data_dir2"], prefix)
@@ -124,5 +105,3 @@ def fep_score(model, seed):
     derivate_rmse = sum(derivate_score_rmse) / len(derivate_score_rmse)
 
     return fep_spearman, fep_pr, derivate_spearman, derivate_pr, fep_rmse, derivate_rmse
-    # return derivate_score_spearman, derivate_score_pr, derivate_score_rmse, derivate_pr
-    # return fep_score_spearman, fep_score_pr, fep_score_rmse, fep_pr
