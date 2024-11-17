@@ -14,7 +14,6 @@ from ..feats.derivate.split_mol2radius import prot_to_graph, mol_to_graph, load_
 import logging
 import warnings
 import pickle
-# 配置日志输出
 logging.basicConfig(level=logging.INFO)
 
 
@@ -294,7 +293,7 @@ class HLDataset(Dataset):
 
 
     def collate_fn(self, batch):
-        # 针对元组中的每个元素应用不同的 collate_fn
+
         pdbids, gps, gls, labels = zip(*batch)
         gps_batch = Batch.from_data_list(gps)
         gls_batch = Batch.from_data_list(gls)
@@ -370,7 +369,7 @@ class LITDataset(Dataset):
 
 
     def collate_fn(self, batch):
-        # 针对元组中的每个元素应用不同的 collate_fn
+
         pdbids, gps, gls, labels = zip(*batch)
         gps_batch = Batch.from_data_list(gps)
         gls_batch = Batch.from_data_list(gls)
@@ -443,7 +442,7 @@ class LINTDataset(Dataset):
         #     logging.info(f"Variable value: {lig_path}")
 
     def collate_fn(self, batch):
-        # 针对元组中的每个元素应用不同的 collate_fn
+
         pdbids, gps, gls, labels = zip(*batch)
         gps_batch = Batch.from_data_list(gps)
         gls_batch = Batch.from_data_list(gls)
