@@ -22,11 +22,6 @@ pretrain LumiScore:
 python ./scripts/train_model.py
 ```
 
-finetune LumiScore with PDBbind2020:
-```
-python ./scripts/SuScore_train.py
-```
-
 Semi-train LumiScore with fep+ dataset:
 ```
 python ./scripts/semi_policy_train.py
