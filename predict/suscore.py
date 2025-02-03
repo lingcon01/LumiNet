@@ -26,8 +26,8 @@ def Input():
     p.add_argument('-l', '--lig', required=True,
                    help='Input ligand file (.sdf/.mol2)')
     p.add_argument('-m', '--model',
-                   default="/home/suqun/tmp/GMP/pretrain/train_and_test/SuScore/SuScore_derivate_pr_mdn2_v2_local.pth",
-                   help='trained model path (default: ""/home/suqun/tmp/GMP/pretrain/train_and_test/SuScore/SuScore_derivate_pr_mdn2_v2_local.pth"')
+                   default="./ckpt/base_model.pt",
+                   help='trained model path (default: ""./ckpt/base_model.pt"')
     p.add_argument('-e', '--encoder', default="gt", choices=["gt", "gatedgcn"],
                    help='the feature encoders for the representation of proteins and ligands (default: "gt")')
     p.add_argument('-o', '--outprefix', default="out",
